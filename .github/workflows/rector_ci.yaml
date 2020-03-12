@@ -1,0 +1,34 @@
+name: Rector CI testing
+
+on:
+  pull_request: null
+  push:
+    branches:
+      - master
+
+jobs:
+  rector-ci:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Create report file
+        run: echo "content" > report.txt
+
+      -
+        name: Check for modified files
+        id: git-check
+        run: |
+            echo ::set-output name=modified::$(if git diff --exit-code --no-patch; then echo "false"; else echo "true"; fi)
+
+      - name: Push changes
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          git config --global user.name 'rector-bot'
+          git config --global user.email 'tomas@getrector.org'
+          git commit -am "Bot commit"
+          git push
+          exit 1
