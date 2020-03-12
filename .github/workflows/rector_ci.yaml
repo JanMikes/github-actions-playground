@@ -17,7 +17,7 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Create report file
-        run: date +%s > report.txt
+        run: echo "content" > report.txt
 
       -
         name: Check for modified files
