@@ -15,3 +15,9 @@ jobs:
         with:
           php-version: 7.3
           coverage: none
+
+      - run: echo $MY_ENV
+
+      - run: php set-env.php
+
+      - run: echo $MY_ENV
