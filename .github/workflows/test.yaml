@@ -4,22 +4,23 @@ on:
   - push
 
 jobs:
-  output-testing:
+  git-diff-changed-files:
     runs-on: ubuntu-latest
     steps:
       -
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Create report file
+        run: date +%s > report.txt
 
       -
-        uses: shivammathur/setup-php@v1
-        with:
-          php-version: 7.3
-          coverage: none
+        name: Check for modified files
+        id: git-check
+        run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
 
-      - run: echo $MY_ENV
-
-      - run: |
-          php set-env.php
-          echo $MY_ENV
-        env:
-          MY_ENV: baz
+      - name: Push changes
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          echo "Im here"
