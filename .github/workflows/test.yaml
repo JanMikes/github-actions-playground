@@ -21,3 +21,5 @@ jobs:
       - run: |
           php set-env.php
           echo $MY_ENV
+        env:
+          MY_ENV: baz
