@@ -20,4 +20,11 @@ jobs:
 
       - run: php set-env.php
 
+      - run: echo true
+      - run: echo false
+
       - run: echo $MY_ENV
+
+      - run: echo $SOME_ENV
+        env:
+          SOME_ENV: foo
