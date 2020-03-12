@@ -19,5 +19,5 @@ jobs:
       - run: echo $MY_ENV
 
       - run: |
-        php set-env.php
-        echo $MY_ENV
+          php set-env.php
+          echo $MY_ENV
