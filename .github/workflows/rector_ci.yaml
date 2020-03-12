@@ -27,5 +27,8 @@ jobs:
       - name: Push changes
         if: steps.git-check.outputs.modified == 'true'
         run: |
-          echo "Im here"
+          git config --global user.name 'rector-bot'
+          git config --global user.email 'tomas@getrector.org'
+          git commit -am "Bot commit"
+          git push
           exit 1
