@@ -1,38 +1,15 @@
-name: Formatted version
+name: Playground
 on:
-  push:
-    # Publish `master` as Docker `latest` image.
-    branches:
-      - master
-
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
+  push: ~
 
 jobs:
-  publish_images:
+  commit_message:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build images
-        run: |
-          echo ${{ github.ref }}
-          echo ${{ github.sha }}
+      - name: get commit message
+        run: echo ::set-env name=COMMIT_MESSAGE::$(git log -1 --pretty=format:"%s")
 
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-
-          echo $VERSION
-
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-          echo $VERSION
-
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
-
-          echo $VERSION@${{ github.sha }}
-
-          echo $VERSION
+      - name: show commit message
+        run: echo $COMMIT_MESSAGE
