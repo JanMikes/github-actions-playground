@@ -1,26 +1,33 @@
-name: Test
-
+name: Formatted version
 on:
-  - push
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - master
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
 
 jobs:
-  git-diff-changed-files:
+  publish_images:
     runs-on: ubuntu-latest
     steps:
-      -
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/checkout@v2
 
-      - name: Create report file
-        run: date +%s > report.txt
-
-      -
-        name: Check for modified files
-        id: git-check
-        run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
-
-      - name: Push changes
-        if: steps.git-check.outputs.modified == 'true'
+      - name: Build images
         run: |
-          echo "Im here"
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          echo $VERSION
+
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          echo $VERSION
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+
+          echo $VERSION
