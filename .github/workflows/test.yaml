@@ -33,4 +33,6 @@ jobs:
           # Use Docker `latest` tag convention
           [ "$VERSION" == "master" ] && VERSION=latest
 
+          echo $VERSION@${{ github.sha }}
+
           echo $VERSION
