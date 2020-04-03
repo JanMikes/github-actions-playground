@@ -17,6 +17,9 @@ jobs:
 
       - name: Build images
         run: |
+          echo ${{ github.ref }}
+          echo ${{ github.sha }}
+
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
